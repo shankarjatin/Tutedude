@@ -53,3 +53,17 @@ exports.getFriendRequests = async (req, res) => {
       res.status(500).json({ error: 'Failed to send friend request' });
     }
   };
+  exports.acceptFriendRequest = async (req, res) => {
+    const requestId = req.params.requestId;
+    try {
+      await User.findByIdAndUpdate(req.user.id, {
+        $pull: { friendRequests: requestId },
+        $addToSet: { friends: requestId },
+      });
+      await User.findByIdAndUpdate(requestId, { $addToSet: { friends: req.user.id } });
+      res.json({ message: 'Friend request accepted' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to accept friend request' });
+    }
+  };
+  
