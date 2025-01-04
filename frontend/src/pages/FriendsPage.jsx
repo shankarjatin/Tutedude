@@ -1,3 +1,4 @@
+// src/pages/FriendsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -47,10 +48,10 @@ const FriendsPage = () => {
       <h2 className="text-xl mb-4">Your Friends</h2>
       <ul>
         {friends.map((friend) => (
-          <li key={friend.username} className="flex justify-between items-center mb-2">
+          <li key={friend._id} className="flex justify-between items-center mb-2">
             <span>{friend.username}</span>
             <button
-              onClick={() => handleRemoveFriend(friend.username)}
+              onClick={() => handleRemoveFriend(friend._id)} // Using friendId (_id) for removal
               className="bg-red-500 text-white p-2 rounded"
             >
               Remove
