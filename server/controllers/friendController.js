@@ -44,3 +44,12 @@ exports.getFriendRequests = async (req, res) => {
       res.status(500).json({ error: 'Failed to fetch friend requests' });
     }
   };
+  exports.sendFriendRequest = async (req, res) => {
+    const userId = req.params.userId;
+    try {
+      await User.findByIdAndUpdate(userId, { $addToSet: { friendRequests: req.user.id } });
+      res.json({ message: 'Friend request sent' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to send friend request' });
+    }
+  };
