@@ -1,3 +1,4 @@
+// src/pages/HomePage.jsx
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
@@ -8,7 +9,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (token) {
-      axios.get('/api/friends', {
+      axios.get(`${BASE_URL}/api/friends`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(response => setFriends(response.data))
