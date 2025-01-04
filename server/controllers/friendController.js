@@ -76,3 +76,19 @@ exports.getFriendRequests = async (req, res) => {
       res.status(500).json({ error: 'Failed to reject friend request' });
     }
   };
+
+  exports.getRecommendations = async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id).populate('friends');
+      const friendsIds = user.friends.map((f) => f._id);
+  
+      const recommendations = await User.find({
+        _id: { $nin: [req.user.id, ...friendsIds] },
+        friends: { $in: friendsIds },
+      }).select('username');
+  
+      res.json(recommendations);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch recommendations' });
+    }
+  };
