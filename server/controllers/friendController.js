@@ -82,13 +82,18 @@ exports.getFriendRequests = async (req, res) => {
       const user = await User.findById(req.user.id).populate('friends');
       const friendsIds = user.friends.map((f) => f._id);
   
+      // Find users with common interests or mutual friends
       const recommendations = await User.find({
         _id: { $nin: [req.user.id, ...friendsIds] },
-        friends: { $in: friendsIds },
-      }).select('username');
+        $or: [
+          { friends: { $in: friendsIds } }, // Mutual friends
+          { interests: { $in: user.interests } }, // Common interests
+        ],
+      }).select('username interests');
   
       res.json(recommendations);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch recommendations' });
     }
   };
+  
