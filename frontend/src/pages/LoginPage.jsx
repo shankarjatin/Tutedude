@@ -1,18 +1,28 @@
+// src/pages/LoginPage.jsx
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../constants';
 
 const LoginPage = () => {
-  const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(username, password)
-      .then(() => navigate('/home'))
-      .catch((err) => console.error(err));
+    try {
+      const response = await axios.post(`${BASE_URL}/api/auth/login`, { username, password });
+      const { token } = response.data;
+
+      // Save the token to localStorage
+      localStorage.setItem('token', token);
+
+      // Redirect to home page after successful login
+      navigate('/home');
+    } catch (err) {
+      console.error('Login failed:', err);
+    }
   };
 
   return (

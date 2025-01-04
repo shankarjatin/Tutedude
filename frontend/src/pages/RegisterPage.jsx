@@ -1,19 +1,32 @@
+// src/pages/RegisterPage.jsx
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../constants';
+import Popup from '../components/Popup';
 
 const RegisterPage = () => {
-  const { register } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [interests, setInterests] = useState([]);
+  const [interests, setInterests] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    register(username, password, interests)
-      .then(() => navigate('/login'))
-      .catch((err) => console.error(err));
+    const interestsArray = interests.split(',').map(interest => interest.trim());
+
+    try {
+      await axios.post(`${BASE_URL}/api/auth/register`, { username, password, interests: interestsArray });
+      setShowPopup(true); // Show the popup after successful registration
+    } catch (err) {
+      console.error('Registration failed:', err);
+    }
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    navigate('/login'); // Redirect to login after popup close
   };
 
   return (
@@ -39,10 +52,12 @@ const RegisterPage = () => {
           className="block w-full p-2 mb-4 border border-gray-300"
           placeholder="Interests (comma separated)"
           value={interests}
-          onChange={(e) => setInterests(e.target.value.split(','))}
+          onChange={(e) => setInterests(e.target.value)}
         />
         <button type="submit" className="w-full p-2 bg-green-500 text-white">Register</button>
       </form>
+
+      {showPopup && <Popup message="User registered successfully!" onClose={handleClosePopup} />}
     </div>
   );
 };

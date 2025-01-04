@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-const BASE_URL = "http://localhost:5000";
+import { BASE_URL } from '../constants';
 
 const AuthContext = createContext();
 
@@ -17,31 +17,24 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      // Fetch current user data
+      // Fetch current user data and other information
       axios.get(`${BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(response => setUser(response.data))
         .catch(error => console.error(error));
 
-      // Fetch Friends List
-      axios.get(`${BASE_URL}/api/friends`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      // Fetch friends and friend requests
+      axios.get(`${BASE_URL}/api/friends`, { headers: { Authorization: `Bearer ${token}` } })
         .then(response => setFriends(response.data))
         .catch(error => console.error(error));
 
-      // Fetch Friend Requests
-      axios.get(`${BASE_URL}/api/friends/requests`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      axios.get(`${BASE_URL}/api/friends/requests`, { headers: { Authorization: `Bearer ${token}` } })
         .then(response => setFriendRequests(response.data))
         .catch(error => console.error(error));
 
-      // Fetch Friend Recommendations
-      axios.get(`${BASE_URL}/api/friends/recommendations`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      // Fetch friend recommendations
+      axios.get(`${BASE_URL}/api/friends/recommendations`, { headers: { Authorization: `Bearer ${token}` } })
         .then(response => setFriendRecommendations(response.data))
         .catch(error => console.error(error));
     }
@@ -51,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     return axios.post(`${BASE_URL}/api/auth/login`, { username, password })
       .then(response => {
         const { token } = response.data;
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', token); // Save token in localStorage
         setToken(token);
         setUser({ username });
       });
