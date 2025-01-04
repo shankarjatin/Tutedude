@@ -1,3 +1,4 @@
+// src/pages/FriendRecommendationsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -37,6 +38,7 @@ const FriendRecommendationsPage = () => {
       })
       .catch(err => {
         console.error('Failed to send friend request:', err);
+        alert('Error sending friend request');
       });
   };
 
@@ -47,10 +49,10 @@ const FriendRecommendationsPage = () => {
       <h2 className="text-xl mb-4">Friend Recommendations</h2>
       <ul>
         {recommendations.map((user) => (
-          <li key={user.username} className="flex justify-between items-center mb-2">
+          <li key={user._id} className="flex justify-between items-center mb-2">
             <span>{user.username}</span>
             <button
-              onClick={() => handleSendRequest(user.username)}
+              onClick={() => handleSendRequest(user._id)} // Using userId (_id) for friend request
               className="bg-blue-500 text-white p-2 rounded"
             >
               Send Request
