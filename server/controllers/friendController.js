@@ -67,3 +67,12 @@ exports.getFriendRequests = async (req, res) => {
     }
   };
   
+  exports.rejectFriendRequest = async (req, res) => {
+    const requestId = req.params.requestId;
+    try {
+      await User.findByIdAndUpdate(req.user.id, { $pull: { friendRequests: requestId } });
+      res.json({ message: 'Friend request rejected' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to reject friend request' });
+    }
+  };
