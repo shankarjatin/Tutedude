@@ -13,3 +13,14 @@ exports.searchUsers = async (req, res) => {
     res.status(500).json({ error: 'Search failed' });
   }
 };
+
+// Get user's friends
+exports.getFriends = async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id).populate('friends', 'username');
+      res.json(user.friends);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch friends' });
+    }
+  };
+  
