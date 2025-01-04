@@ -24,3 +24,13 @@ exports.getFriends = async (req, res) => {
     }
   };
   
+  exports.removeFriend = async (req, res) => {
+    const friendId = req.params.id;
+    try {
+      await User.findByIdAndUpdate(req.user.id, { $pull: { friends: friendId } });
+      await User.findByIdAndUpdate(friendId, { $pull: { friends: req.user.id } });
+      res.json({ message: 'Friend removed successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to remove friend' });
+    }
+  };
