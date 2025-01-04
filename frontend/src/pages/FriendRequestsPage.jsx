@@ -1,3 +1,4 @@
+// src/pages/FriendRequestsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -60,16 +61,16 @@ const FriendRequestsPage = () => {
       <h2 className="text-xl mb-4">Friend Requests</h2>
       <ul>
         {friendRequests.map((request) => (
-          <li key={request.username} className="flex justify-between items-center mb-2">
+          <li key={request._id} className="flex justify-between items-center mb-2">
             <span>{request.username}</span>
             <button
-              onClick={() => handleAcceptRequest(request.username)}
+              onClick={() => handleAcceptRequest(request._id)} // Using requestId (_id) for accept
               className="bg-green-500 text-white p-2 rounded"
             >
               Accept
             </button>
             <button
-              onClick={() => handleRejectRequest(request.username)}
+              onClick={() => handleRejectRequest(request._id)} // Using requestId (_id) for reject
               className="bg-red-500 text-white p-2 rounded"
             >
               Reject
