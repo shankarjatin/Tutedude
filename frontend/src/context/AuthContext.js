@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
+const BASE_URL = "http://localhost:5000";
 
 const AuthContext = createContext();
 
@@ -16,30 +17,29 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      axios.get('/api/auth/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      // Fetch current user data
+      axios.get(`${BASE_URL}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
         .then(response => setUser(response.data))
         .catch(error => console.error(error));
 
-      // Fetch Friends
-      axios.get('/api/friends', {
+      // Fetch Friends List
+      axios.get(`${BASE_URL}/api/friends`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(response => setFriends(response.data))
         .catch(error => console.error(error));
 
       // Fetch Friend Requests
-      axios.get('/api/friends/requests', {
+      axios.get(`${BASE_URL}/api/friends/requests`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(response => setFriendRequests(response.data))
         .catch(error => console.error(error));
 
       // Fetch Friend Recommendations
-      axios.get('/api/friends/recommendations', {
+      axios.get(`${BASE_URL}/api/friends/recommendations`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(response => setFriendRecommendations(response.data))
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = (username, password) => {
-    return axios.post('/api/auth/login', { username, password })
+    return axios.post(`${BASE_URL}/api/auth/login`, { username, password })
       .then(response => {
         const { token } = response.data;
         localStorage.setItem('token', token);
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = (username, password, interests) => {
-    return axios.post('/api/auth/register', { username, password, interests });
+    return axios.post(`${BASE_URL}/api/auth/register`, { username, password, interests });
   };
 
   const logout = () => {
@@ -68,31 +68,31 @@ export const AuthProvider = ({ children }) => {
   };
 
   const sendFriendRequest = (userId) => {
-    return axios.post(`/api/friends/requests/${userId}`, {}, {
+    return axios.post(`${BASE_URL}/api/friends/requests/${userId}`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
   };
 
   const acceptFriendRequest = (requestId) => {
-    return axios.post(`/api/friends/requests/${requestId}/accept`, {}, {
+    return axios.post(`${BASE_URL}/api/friends/requests/${requestId}/accept`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
   };
 
   const rejectFriendRequest = (requestId) => {
-    return axios.post(`/api/friends/requests/${requestId}/reject`, {}, {
+    return axios.post(`${BASE_URL}/api/friends/requests/${requestId}/reject`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
   };
 
   const removeFriend = (friendId) => {
-    return axios.delete(`/api/friends/${friendId}`, {
+    return axios.delete(`${BASE_URL}/api/friends/${friendId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
   };
 
   const searchUsers = (query) => {
-    return axios.get(`/api/users/search?query=${query}`, {
+    return axios.get(`${BASE_URL}/api/users/search?query=${query}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
   };
