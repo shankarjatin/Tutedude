@@ -1,5 +1,15 @@
 const User = require('../models/User');
 
+// List all users in the system
+exports.getAllUsers = async (req, res) => {
+    try {
+      const users = await User.find().select('username interests'); // Exclude sensitive fields like password
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch users' });
+    }
+  };
+  
 // Search for users
 exports.searchUsers = async (req, res) => {
   const { query } = req.query;

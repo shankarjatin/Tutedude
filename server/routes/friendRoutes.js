@@ -1,5 +1,6 @@
 const express = require('express');
 const {
+    getAllUsers,
   searchUsers,
   getFriends,
   removeFriend,
@@ -13,6 +14,7 @@ const authenticate = require('../middleware/authenticate');
 
 const router = express.Router();
 
+router.get('/all', authenticate, getAllUsers);
 // Search for users
 router.get('/search', authenticate, searchUsers);
 
