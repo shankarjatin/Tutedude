@@ -73,14 +73,33 @@ exports.getFriends = async (req, res) => {
   };
 
   // Get friend requests
-exports.getFriendRequests = async (req, res) => {
+  exports.getFriendRequests = async (req, res) => {
     try {
-      const user = await User.findById(req.user.id).populate('friendRequests', 'username');
-      res.json(user.friendRequests);
+      // Find the current user and populate friend requests
+      const user = await User.findById(req.user.id).populate('friendRequests', 'username interests friends');
+      const currentUserFriendsIds = user.friends.map((f) => f.toString());
+  
+      // Map friend requests to include mutual friends count
+      const friendRequestsWithDetails = user.friendRequests.map((requestUser) => {
+        const mutualFriends = requestUser.friends.filter((friendId) =>
+          currentUserFriendsIds.includes(friendId.toString())
+        ).length;
+  
+        return {
+          _id: requestUser._id,
+          username: requestUser.username,
+          interests: requestUser.interests,
+          mutualFriends,
+        };
+      });
+  
+      res.json(friendRequestsWithDetails);
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: 'Failed to fetch friend requests' });
     }
   };
+  
   exports.sendFriendRequest = async (req, res) => {
     const userId = req.params.userId;
     try {
