@@ -8,6 +8,7 @@ import AllUsersPage from './AllUsersPage';
 import FriendRecommendationsPage from './FriendRecommendationsPage';
 import FriendRequestsPage from './FriendRequestsPage';
 import FriendsPage from './FriendsPage';
+import SearchUsersPage from './SearchUsersPage';
 
 const HomePage = () => {
   const [user, setUser] = useState(null);
@@ -107,6 +108,12 @@ const HomePage = () => {
         >
           Friends List
         </button>
+        <button
+          onClick={() => navigateToPage('Search-Friend')}
+          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:bg-[#8174A0] transition duration-300"
+        >
+          Search Friend
+        </button>
       </div>
 
       {/* Render the current page component */}
@@ -115,6 +122,7 @@ const HomePage = () => {
         {currentPage === 'friend-recommendations' && <FriendRecommendationsPage />}
         {currentPage === 'friend-requests' && <FriendRequestsPage />}
         {currentPage === 'friends' && <FriendsPage />}
+        {currentPage === 'Search-Friend' && <SearchUsersPage />}
       </div>
     </div>
   );

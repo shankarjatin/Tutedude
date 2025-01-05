@@ -9,12 +9,13 @@ const UserCard = ({
   onSendRequest,
   onAcceptRequest,
   onRejectRequest,
-  acceptButtonText,
-  rejectButtonText,
+  acceptButtonText = "Accept",  // Default text for Accept button
+  rejectButtonText = "Reject", // Default text for Reject button
+  removeButtonText = "Remove", // Default text for Remove button
+  onRemoveFriend,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 hover:shadow-xl">
-      {/* User Card Content */}
       <div className="flex flex-col items-center">
         {/* Avatar Placeholder */}
         <div className="w-20 h-20 bg-[#8174A0] rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
@@ -35,41 +36,42 @@ const UserCard = ({
           <p className="text-sm text-gray-600 mb-4">No mutual friends.</p>
         )}
 
-        {/* Render appropriate buttons depending on the use case */}
-        {requestSent ? (
+        {/* Render buttons based on the props passed */}
+        {onRemoveFriend ? (
+          // Remove button (for FriendsPage)
           <Button
-            onClick={onSendRequest}
-            text="Request Sent"
-            disabled={true}
-            buttonStyle="bg-gray-400 text-white"
-            hoverStyle=""
+            onClick={onRemoveFriend}
+            text={removeButtonText}
+            disabled={false}
+            buttonStyle="bg-red-600 text-white"
+            hoverStyle="hover:bg-red-700"
           />
         ) : onAcceptRequest && onRejectRequest ? (
-          // For FriendRequestsPage
+          // Accept/Reject buttons (for FriendRequestsPage)
           <div className="flex justify-around space-x-4 mt-4">
             <Button
               onClick={onAcceptRequest}
-              text={acceptButtonText || 'Accept'}
+              text={acceptButtonText}
               disabled={false}
               buttonStyle="bg-green-700 text-white"
               hoverStyle="hover:bg-green-800"
             />
             <Button
               onClick={onRejectRequest}
-              text={rejectButtonText || 'Reject'}
+              text={rejectButtonText}
               disabled={false}
               buttonStyle="bg-red-600 text-white"
               hoverStyle="hover:bg-red-700"
             />
           </div>
         ) : (
-          // For AllUsersPage
+          // Send Request button (for AllUsersPage or SearchUsersPage)
           <Button
             onClick={onSendRequest}
-            text="Send Request"
-            disabled={false}
-            buttonStyle="bg-[#441752] text-white"
-            hoverStyle="hover:bg-[#8174A0]"
+            text={requestSent ? 'Request Sent' : 'Send Request'}
+            disabled={requestSent}
+            buttonStyle={requestSent ? 'bg-gray-400 text-white' : 'bg-[#441752] text-white'}
+            hoverStyle={requestSent ? '' : 'hover:bg-[#8174A0]'}
           />
         )}
       </div>

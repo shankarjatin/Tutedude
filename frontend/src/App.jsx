@@ -8,6 +8,7 @@ import AllUsersPage from './pages/AllUsersPage';
 import FriendRecommendationsPage from './pages/FriendRecommendationsPage';
 import FriendRequestsPage from './pages/FriendRequestsPage';
 import FriendsPage from './pages/FriendsPage';
+import SearchUsersPage from './pages/SearchUsersPage';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/friend-recommendations" element={<FriendRecommendationsPage />} />
         <Route path="/friend-requests" element={<FriendRequestsPage />} />
         <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/search" element={<SearchUsersPage />} />
       </Routes>
     </Router>
   );
