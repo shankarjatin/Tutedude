@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
+import UserCard from '../components/UserCard';  // Import the UserCard component
 
 const AllUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -61,46 +62,14 @@ const AllUsersPage = () => {
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {users.map((user) => (
-          <div
+          <UserCard
             key={user._id}
-            className="bg-white rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 hover:shadow-xl"
-          >
-            {/* User Card Content */}
-            <div className="flex flex-col items-center">
-              {/* Avatar Placeholder */}
-              <div className="w-20 h-20 bg-[#8174A0] rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
-                {user.username[0]}
-              </div>
-              <h3 className="text-xl font-semibold text-[#441752] mb-2">
-                {user.username}
-              </h3>
-              <p className="text-sm text-gray-600 mb-2">
-                Interests: {user.interests?.join(', ') || 'No interests listed'}
-              </p>
-              {user.mutualFriends !== undefined && (
-                <p className="text-sm text-gray-600 mb-4">
-                  Mutual Friends: {user.mutualFriends || 0}
-                </p>
-              )}
-
-              {/* Request Button */}
-              {user.requestSent ? (
-                <button
-                  disabled
-                  className="bg-gray-400 text-white p-3 rounded-lg cursor-not-allowed"
-                >
-                  Request Sent
-                </button>
-              ) : (
-                <button
-                  onClick={() => handleSendRequest(user._id)}
-                  className="bg-[#441752] text-white p-3 rounded-lg hover:bg-[#8174A0] transition duration-300"
-                >
-                  Send Request
-                </button>
-              )}
-            </div>
-          </div>
+            username={user.username}
+            interests={user.interests}
+            mutualFriends={user.mutualFriends || 0}
+            onSendRequest={() => handleSendRequest(user._id)}
+            requestSent={user.requestSent}
+          />
         ))}
       </div>
     </div>

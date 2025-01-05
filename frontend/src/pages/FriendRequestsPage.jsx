@@ -1,11 +1,11 @@
-// src/pages/FriendRequestsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
+import UserCard from '../components/UserCard';  // Import the UserCard component
 
-const FriendRequestsPage = () => {
-  const [friendRequests, setFriendRequests] = useState([]);
+const FriendRecommendationsPage = () => {
+  const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -14,72 +14,57 @@ const FriendRequestsPage = () => {
     if (!token) {
       navigate('/login'); // Redirect to login if no token found
     } else {
-      // Fetch friend requests
-      axios.get(`${BASE_URL}/api/friends/requests`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(response => {
-          setFriendRequests(response.data);
+      // Fetch friend recommendations
+      axios
+        .get(`${BASE_URL}/api/friends/recommendations`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          setRecommendations(response.data);
           setLoading(false);
         })
-        .catch(err => {
-          console.error('Failed to fetch friend requests:', err);
+        .catch((err) => {
+          console.error('Failed to fetch recommendations:', err);
         });
     }
   }, [navigate]);
 
-  const handleAcceptRequest = (requestId) => {
+  const handleSendRequest = (userId) => {
     const token = localStorage.getItem('token');
-    axios.post(`${BASE_URL}/api/friends/requests/${requestId}/accept`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => {
-        alert('Friend request accepted');
+    axios
+      .post(`${BASE_URL}/api/friends/requests/${userId}`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .catch(err => {
-        console.error('Failed to accept friend request:', err);
-      });
-  };
-
-  const handleRejectRequest = (requestId) => {
-    const token = localStorage.getItem('token');
-    axios.post(`${BASE_URL}/api/friends/requests/${requestId}/reject`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => {
-        alert('Friend request rejected');
+      .then((response) => {
+        alert('Friend request sent successfully');
       })
-      .catch(err => {
-        console.error('Failed to reject friend request:', err);
+      .catch((err) => {
+        console.error('Failed to send friend request:', err);
+        alert('Error sending friend request');
       });
   };
 
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl mb-4">Friend Requests</h2>
-      <ul>
-        {friendRequests.map((request) => (
-          <li key={request._id} className="flex justify-between items-center mb-2">
-            <span>{request.username}</span>
-            <button
-              onClick={() => handleAcceptRequest(request._id)} // Using requestId (_id) for accept
-              className="bg-green-500 text-white p-2 rounded"
-            >
-              Accept
-            </button>
-            <button
-              onClick={() => handleRejectRequest(request._id)} // Using requestId (_id) for reject
-              className="bg-red-500 text-white p-2 rounded"
-            >
-              Reject
-            </button>
-          </li>
+    <div className="p-6 bg-[#F9F6E6] min-h-screen">
+      <h2 className="text-3xl font-semibold text-center text-[#441752] mb-6">
+        Friend Recommendations
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {recommendations.map((user) => (
+          <UserCard
+            key={user._id}
+            username={user.username}
+            interests={user.interests}
+            mutualFriends={user.mutualFriends || 0}
+            onSendRequest={() => handleSendRequest(user._id)}
+            requestSent={false}  // Friend requests are not tracked here
+          />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
 
-export default FriendRequestsPage;
+export default FriendRecommendationsPage;
