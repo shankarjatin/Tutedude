@@ -58,7 +58,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="p-8 bg-[#EFB6C8] min-h-screen">
+    <div className="min-h-screen bg-gradient-to-r from-[#F9F6E6] via-[#A888B5] to-[#441752] p-8">
       {/* Header with user information and logout */}
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl p-8 mb-8 flex justify-between items-center">
         {/* Left Side: User Info */}
@@ -86,31 +86,31 @@ const HomePage = () => {
       <div className="max-w-4xl mx-auto flex justify-center space-x-4 mb-8">
         <button
           onClick={() => navigateToPage('all-users')}
-          className="px-6 py-3 bg-[#A888B5] text-[#441752] rounded-lg shadow-md hover:bg-[#8174A0] transition duration-300"
+          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
         >
           All Users
         </button>
         <button
           onClick={() => navigateToPage('friend-recommendations')}
-          className="px-6 py-3 bg-[#8174A0] text-white rounded-lg shadow-md hover:bg-[#A888B5] transition duration-300"
+          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
         >
           Friend Recommendations
         </button>
         <button
           onClick={() => navigateToPage('friend-requests')}
-          className="px-6 py-3 bg-[#A888B5] text-[#441752] rounded-lg shadow-md hover:bg-[#8174A0] transition duration-300"
+          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
         >
           Friend Requests
         </button>
         <button
           onClick={() => navigateToPage('friends')}
-          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:bg-[#8174A0] transition duration-300"
+          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
         >
           Friends List
         </button>
         <button
           onClick={() => navigateToPage('Search-Friend')}
-          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:bg-[#8174A0] transition duration-300"
+          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
         >
           Search Friend
         </button>

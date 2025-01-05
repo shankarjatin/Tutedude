@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
 import UserCard from '../components/UserCard';  // Import UserCard
+import { toast, ToastContainer } from 'react-toastify'; // Import toast
+import 'react-toastify/dist/ReactToastify.css'; // Import the default styles for the toast
 
 const AllUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -45,11 +47,11 @@ const AllUsersPage = () => {
             user._id === userId ? { ...user, requestSent: true } : user
           )
         );
-        alert('Friend request sent successfully');
+        toast.success('Friend request sent successfully!'); // Show success toast
       })
       .catch((err) => {
         console.error('Failed to send friend request:', err);
-        alert('Error sending friend request');
+        toast.error('Error sending friend request!'); // Show error toast
       });
   };
 
@@ -72,6 +74,8 @@ const AllUsersPage = () => {
           />
         ))}
       </div>
+      {/* Toast container to render toasts */}
+      <ToastContainer />
     </div>
   );
 };
