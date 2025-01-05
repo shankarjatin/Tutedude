@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
-import UserCard from '../components/UserCard';  // Import UserCard
-import { toast, ToastContainer } from 'react-toastify'; // Import toast
-import 'react-toastify/dist/ReactToastify.css'; // Import the default styles for the toast
+import UserCard from '../components/UserCard';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AllUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -14,15 +14,14 @@ const AllUsersPage = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/login'); // Redirect to login if no token found
+      navigate('/login');
     } else {
-      // Fetch all users
       axios
         .get(`${BASE_URL}/api/friends/all`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
-          setUsers(response.data.map((user) => ({ ...user, requestSent: false }))); // Add requestSent flag
+          setUsers(response.data.map((user) => ({ ...user, requestSent: false })));
           setLoading(false);
         })
         .catch((err) => {
@@ -47,11 +46,11 @@ const AllUsersPage = () => {
             user._id === userId ? { ...user, requestSent: true } : user
           )
         );
-        toast.success('Friend request sent successfully!'); // Show success toast
+        toast.success('Friend request sent successfully!');
       })
       .catch((err) => {
         console.error('Failed to send friend request:', err);
-        toast.error('Error sending friend request!'); // Show error toast
+        toast.error('Error sending friend request!');
       });
   };
 
@@ -74,7 +73,7 @@ const AllUsersPage = () => {
           />
         ))}
       </div>
-      {/* Toast container to render toasts */}
+   
       <ToastContainer />
     </div>
   );

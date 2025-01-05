@@ -1,8 +1,9 @@
-// src/pages/LoginPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import default styles for toast notifications
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -21,27 +22,29 @@ const LoginPage = () => {
 
       // Redirect to home page after successful login
       navigate('/home');
+      toast.success('Login successful!'); // Show success toast
     } catch (err) {
       console.error('Login failed:', err);
+      toast.error('Invalid username or password'); // Show error toast
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen min-w-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#A888B5] to-[#441752]">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg sm:w-96">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Welcome back</h2>
+        <h2 className="text-2xl font-semibold text-center text-[#441752] mb-6">Welcome back</h2>
 
         <form onSubmit={handleSubmit}>
           {/* Email Address Input */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700" htmlFor="email">
+            <label className="block text-sm font-medium text-[#441752]" htmlFor="email">
               Email address
             </label>
             <input
               type="text"
               id="email"
               name="email"
-              className="w-full p-3 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8174A0]"
               placeholder="Enter your email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -50,14 +53,14 @@ const LoginPage = () => {
 
           {/* Password Input */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700" htmlFor="password">
+            <label className="block text-sm font-medium text-[#441752]" htmlFor="password">
               Password
             </label>
             <input
               type="password"
               id="password"
               name="password"
-              className="w-full p-3 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8174A0]"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -70,43 +73,33 @@ const LoginPage = () => {
               type="checkbox"
               id="remember"
               name="remember"
-              className="w-4 h-4 text-blue-500 border-gray-300 rounded"
+              className="w-4 h-4 text-[#441752] border-gray-300 rounded"
             />
-            <label htmlFor="remember" className="ml-2 text-sm text-gray-600">Remember for 30 days</label>
+            <label htmlFor="remember" className="ml-2 text-sm text-[#441752]">Remember for 30 days</label>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full py-3 bg-[#441752] text-white font-semibold rounded-lg shadow-md hover:bg-[#8174A0] focus:outline-none focus:ring-2 focus:ring-[#8174A0]"
           >
             Login
           </button>
 
-          {/* Forgot Password Link
-          <div className="mt-4 text-center">
-            <a href="#" className="text-sm text-blue-600 hover:underline">Forgot password?</a>
-          </div>
-
-          {/* Google Sign-In */}
-          {/* <div className="mt-6 text-center">
-            <button
-              className="w-full py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none"
-              onClick={() => {}}
-            >
-              <span className="mr-2">Sign in with Google</span>
-              <img src="/google-icon.svg" alt="Google Icon" className="inline h-5" />
-            </button>
-          </div> */} 
-          
           {/* Sign Up Link */}
           <div className="mt-4 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-[#441752]">
               Don't have an account?{' '}
-              <a href="/register" className="text-blue-600 hover:underline">Sign up</a>
+              <a href="/" className="text-[#A888B5] hover:underline">Sign up</a>
             </p>
           </div>
         </form>
+      </div>
+
+      {/* Toast container to render toasts */}
+      <ToastContainer />
+      <div className="absolute bottom-0 left-0 w-full py-4 text-center text-sm text-[#441752] bg-white">
+        <p>Full Stack Intern Role Assignment Submission by Jatin Shankar Srivastava</p>
       </div>
     </div>
   );

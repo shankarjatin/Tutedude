@@ -83,38 +83,41 @@ const HomePage = () => {
       </div>
 
       {/* Navigation Buttons */}
-      <div className="max-w-4xl mx-auto flex justify-center space-x-4 mb-8">
-        <button
-          onClick={() => navigateToPage('all-users')}
-          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
-        >
-          All Users
-        </button>
-        <button
-          onClick={() => navigateToPage('friend-recommendations')}
-          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
-        >
-          Friend Recommendations
-        </button>
-        <button
-          onClick={() => navigateToPage('friend-requests')}
-          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
-        >
-          Friend Requests
-        </button>
-        <button
-          onClick={() => navigateToPage('friends')}
-          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
-        >
-          Friends List
-        </button>
-        <button
-          onClick={() => navigateToPage('Search-Friend')}
-          className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
-        >
-          Search Friend
-        </button>
-      </div>
+      <div className="max-w-4xl mx-auto mb-8">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+    <button
+      onClick={() => navigateToPage('all-users')}
+      className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
+    >
+      All Users
+    </button>
+    <button
+      onClick={() => navigateToPage('friend-recommendations')}
+      className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
+    >
+      Friend Recommendations
+    </button>
+    <button
+      onClick={() => navigateToPage('friend-requests')}
+      className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
+    >
+      Friend Requests
+    </button>
+    <button
+      onClick={() => navigateToPage('friends')}
+      className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
+    >
+      Friends List
+    </button>
+    <button
+      onClick={() => navigateToPage('Search-Friend')}
+      className="px-6 py-3 bg-[#441752] text-white rounded-lg shadow-md hover:shadow-xl transition duration-300"
+    >
+      Search Friend
+    </button>
+  </div>
+</div>
+
 
       {/* Render the current page component */}
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl p-8">

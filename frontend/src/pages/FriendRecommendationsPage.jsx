@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
-import UserCard from '../components/UserCard';  // Import the UserCard component
-import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Import the default styles for toast notifications
+import UserCard from '../components/UserCard';  
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const FriendRecommendationsPage = () => {
   const [recommendations, setRecommendations] = useState([]);
@@ -14,7 +14,7 @@ const FriendRecommendationsPage = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/login'); // Redirect to login if no token found
+      navigate('/login'); 
     } else {
       // Fetch friend recommendations
       axios
@@ -43,11 +43,11 @@ const FriendRecommendationsPage = () => {
             user._id === userId ? { ...user, requestSent: true } : user
           )
         );
-        toast.success('Friend request sent successfully!'); // Show success toast
+        toast.success('Friend request sent successfully!'); 
       })
       .catch((err) => {
         console.error('Failed to send friend request:', err);
-        toast.error('Error sending friend request!'); // Show error toast
+        toast.error('Error sending friend request!'); 
       });
   };
 
@@ -66,12 +66,12 @@ const FriendRecommendationsPage = () => {
             interests={user.interests}
             mutualFriends={user.mutualFriends || 0}
             onSendRequest={() => handleSendRequest(user._id)}
-            requestSent={user.requestSent || false}  // Track if the request is sent
+            requestSent={user.requestSent || false}  
           />
         ))}
       </div>
 
-      {/* Toast container to render toasts */}
+     
       <ToastContainer/>
     </div>
   );
