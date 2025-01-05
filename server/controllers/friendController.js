@@ -116,21 +116,38 @@ exports.getFriendRequests = async (req, res) => {
 
   exports.getRecommendations = async (req, res) => {
     try {
-      const user = await User.findById(req.user.id).populate('friends');
-      const friendsIds = user.friends.map((f) => f._id);
+      // Find the current user and their friends
+      const user = await User.findById(req.user.id).populate('friends', '_id');
+      const friendsIds = user.friends.map((f) => f._id.toString());
   
-      // Find users with common interests or mutual friends
+      // Find recommended users (mutual friends or common interests)
       const recommendations = await User.find({
-        _id: { $nin: [req.user.id, ...friendsIds] },
+        _id: { $nin: [req.user.id, ...friendsIds] }, // Exclude current user and their friends
         $or: [
-          { friends: { $in: friendsIds } }, // Mutual friends
-          { interests: { $in: user.interests } }, // Common interests
+          { friends: { $in: friendsIds } }, // Users with mutual friends
+          { interests: { $in: user.interests } }, // Users with common interests
         ],
-      }).select('username interests');
+      }).populate('friends', '_id'); // Populate friends to calculate mutual friends
   
-      res.json(recommendations);
+      // Map recommendations to include mutual friends count
+      const recommendationsWithDetails = recommendations.map((recUser) => {
+        const mutualFriends = recUser.friends.filter((friend) =>
+          friendsIds.includes(friend._id.toString())
+        ).length;
+  
+        return {
+          _id: recUser._id,
+          username: recUser.username,
+          interests: recUser.interests,
+          mutualFriends,
+        };
+      });
+  
+      res.json(recommendationsWithDetails);
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: 'Failed to fetch recommendations' });
     }
   };
+  
   

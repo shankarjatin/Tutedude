@@ -1,4 +1,3 @@
-// src/pages/FriendRecommendationsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -15,14 +14,15 @@ const FriendRecommendationsPage = () => {
       navigate('/login'); // Redirect to login if no token found
     } else {
       // Fetch friend recommendations
-      axios.get(`${BASE_URL}/api/friends/recommendations`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(response => {
+      axios
+        .get(`${BASE_URL}/api/friends/recommendations`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
           setRecommendations(response.data);
           setLoading(false);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error('Failed to fetch recommendations:', err);
         });
     }
@@ -30,13 +30,14 @@ const FriendRecommendationsPage = () => {
 
   const handleSendRequest = (userId) => {
     const token = localStorage.getItem('token');
-    axios.post(`${BASE_URL}/api/friends/requests/${userId}`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => {
+    axios
+      .post(`${BASE_URL}/api/friends/requests/${userId}`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
         alert('Friend request sent successfully');
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Failed to send friend request:', err);
         alert('Error sending friend request');
       });
@@ -45,21 +46,48 @@ const FriendRecommendationsPage = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl mb-4">Friend Recommendations</h2>
-      <ul>
+    <div className="p-6 bg-[#F9F6E6] min-h-screen">
+      <h2 className="text-3xl font-semibold text-center text-[#441752] mb-6">
+        Friend Recommendations
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {recommendations.map((user) => (
-          <li key={user._id} className="flex justify-between items-center mb-2">
-            <span>{user.username}</span>
-            <button
-              onClick={() => handleSendRequest(user._id)} // Using userId (_id) for friend request
-              className="bg-blue-500 text-white p-2 rounded"
-            >
-              Send Request
-            </button>
-          </li>
+          <div
+            key={user._id}
+            className="bg-white rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 hover:shadow-xl"
+          >
+            {/* User Card Content */}
+            <div className="flex flex-col items-center">
+              {/* Avatar Placeholder */}
+              <div className="w-20 h-20 bg-[#8174A0] rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
+                {user.username[0]}
+              </div>
+              <h3 className="text-xl font-semibold text-[#441752] mb-2">{user.username}</h3>
+              <p className="text-sm text-gray-600 mb-2">
+                Interests: {user.interests?.join(', ') || 'No interests listed'}
+              </p>
+
+              {/* Display Mutual Friends if available */}
+              {user.mutualFriends > 0 ? (
+                <div className="text-sm text-gray-600 mb-4">
+                  <strong>Mutual Friends:</strong>
+                  <span> {user.mutualFriends}</span>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-600 mb-4">No mutual friends.</p>
+              )}
+
+              {/* Send Request Button */}
+              <button
+                onClick={() => handleSendRequest(user._id)}
+                className="bg-[#441752] text-white p-3 rounded-lg hover:bg-[#8174A0] transition duration-300"
+              >
+                Send Request
+              </button>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
