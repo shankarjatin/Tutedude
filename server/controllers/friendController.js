@@ -7,18 +7,35 @@ exports.getAllUsers = async (req, res) => {
       const currentUser = await User.findById(req.user.id).populate('friends', '_id');
   
       // Get the IDs of the current user's friends
-      const friendIds = currentUser.friends.map(friend => friend._id);
+      const friendIds = currentUser.friends.map((friend) => friend._id.toString());
   
       // Fetch all users except the current user and their friends
       const users = await User.find({
         _id: { $nin: [req.user.id, ...friendIds] }, // Exclude current user and friends
-      }).select('username interests'); // Exclude sensitive fields like password
+      }).populate('friends', '_id'); // Populate friends for mutual friend calculation
   
-      res.json(users);
+      // Map users and calculate mutual friends
+      const usersWithMutualFriends = users.map((user) => {
+        const mutualFriends = user.friends.filter((friend) =>
+          friendIds.includes(friend._id.toString())
+        ).length;
+  
+        return {
+          _id: user._id,
+          username: user.username,
+          interests: user.interests,
+          mutualFriends,
+        };
+      });
+  
+      res.json(usersWithMutualFriends);
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: 'Failed to fetch users' });
     }
   };
+  
+  
   
 // Search for users
 exports.searchUsers = async (req, res) => {
