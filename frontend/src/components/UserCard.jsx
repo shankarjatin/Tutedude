@@ -1,11 +1,16 @@
 import React from 'react';
+import Button from './Button';  // Import the reusable Button component
 
 const UserCard = ({
   username,
   interests,
   mutualFriends,
-  onSendRequest,
   requestSent,
+  onSendRequest,
+  onAcceptRequest,
+  onRejectRequest,
+  acceptButtonText,
+  rejectButtonText,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105 hover:shadow-xl">
@@ -30,21 +35,42 @@ const UserCard = ({
           <p className="text-sm text-gray-600 mb-4">No mutual friends.</p>
         )}
 
-        {/* Send Request Button */}
+        {/* Render appropriate buttons depending on the use case */}
         {requestSent ? (
-          <button
-            disabled
-            className="bg-gray-400 text-white p-3 rounded-lg cursor-not-allowed"
-          >
-            Request Sent
-          </button>
-        ) : (
-          <button
+          <Button
             onClick={onSendRequest}
-            className="bg-[#441752] text-white p-3 rounded-lg hover:bg-[#8174A0] transition duration-300"
-          >
-            Send Request
-          </button>
+            text="Request Sent"
+            disabled={true}
+            buttonStyle="bg-gray-400 text-white"
+            hoverStyle=""
+          />
+        ) : onAcceptRequest && onRejectRequest ? (
+          // For FriendRequestsPage
+          <div className="flex justify-around space-x-4 mt-4">
+            <Button
+              onClick={onAcceptRequest}
+              text={acceptButtonText || 'Accept'}
+              disabled={false}
+              buttonStyle="bg-green-700 text-white"
+              hoverStyle="hover:bg-green-800"
+            />
+            <Button
+              onClick={onRejectRequest}
+              text={rejectButtonText || 'Reject'}
+              disabled={false}
+              buttonStyle="bg-red-600 text-white"
+              hoverStyle="hover:bg-red-700"
+            />
+          </div>
+        ) : (
+          // For AllUsersPage
+          <Button
+            onClick={onSendRequest}
+            text="Send Request"
+            disabled={false}
+            buttonStyle="bg-[#441752] text-white"
+            hoverStyle="hover:bg-[#8174A0]"
+          />
         )}
       </div>
     </div>

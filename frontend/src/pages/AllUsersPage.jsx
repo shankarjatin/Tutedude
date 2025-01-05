@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
-import UserCard from '../components/UserCard';  // Import the UserCard component
+import UserCard from '../components/UserCard';  // Import UserCard
 
 const AllUsersPage = () => {
   const [users, setUsers] = useState([]);

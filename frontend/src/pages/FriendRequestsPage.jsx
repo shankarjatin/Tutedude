@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
-import UserCard from '../components/UserCard';  // Import the UserCard component
+import UserCard from '../components/UserCard';  // Import UserCard component
 
-const FriendRecommendationsPage = () => {
-  const [recommendations, setRecommendations] = useState([]);
+const FriendRequestsPage = () => {
+  const [friendRequests, setFriendRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -14,33 +14,52 @@ const FriendRecommendationsPage = () => {
     if (!token) {
       navigate('/login'); // Redirect to login if no token found
     } else {
-      // Fetch friend recommendations
+      // Fetch friend requests
       axios
-        .get(`${BASE_URL}/api/friends/recommendations`, {
+        .get(`${BASE_URL}/api/friends/requests`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
-          setRecommendations(response.data);
+          setFriendRequests(response.data);
           setLoading(false);
         })
         .catch((err) => {
-          console.error('Failed to fetch recommendations:', err);
+          console.error('Failed to fetch friend requests:', err);
         });
     }
   }, [navigate]);
 
-  const handleSendRequest = (userId) => {
+  const handleAcceptRequest = (requestId) => {
     const token = localStorage.getItem('token');
     axios
-      .post(`${BASE_URL}/api/friends/requests/${userId}`, {}, {
+      .post(`${BASE_URL}/api/friends/requests/${requestId}/accept`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        alert('Friend request sent successfully');
+        alert('Friend request accepted');
+        setFriendRequests((prevRequests) =>
+          prevRequests.filter((request) => request._id !== requestId)
+        ); // Remove accepted request instantly
       })
       .catch((err) => {
-        console.error('Failed to send friend request:', err);
-        alert('Error sending friend request');
+        console.error('Failed to accept friend request:', err);
+      });
+  };
+
+  const handleRejectRequest = (requestId) => {
+    const token = localStorage.getItem('token');
+    axios
+      .post(`${BASE_URL}/api/friends/requests/${requestId}/reject`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        alert('Friend request rejected');
+        setFriendRequests((prevRequests) =>
+          prevRequests.filter((request) => request._id !== requestId)
+        ); // Remove rejected request instantly
+      })
+      .catch((err) => {
+        console.error('Failed to reject friend request:', err);
       });
   };
 
@@ -49,17 +68,20 @@ const FriendRecommendationsPage = () => {
   return (
     <div className="p-6 bg-[#F9F6E6] min-h-screen">
       <h2 className="text-3xl font-semibold text-center text-[#441752] mb-6">
-        Friend Recommendations
+        Friend Requests
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {recommendations.map((user) => (
+        {friendRequests.map((request) => (
           <UserCard
-            key={user._id}
-            username={user.username}
-            interests={user.interests}
-            mutualFriends={user.mutualFriends || 0}
-            onSendRequest={() => handleSendRequest(user._id)}
-            requestSent={false}  // Friend requests are not tracked here
+            key={request._id}
+            username={request.username}
+            interests={request.interests}
+            mutualFriends={request.mutualFriends || 0}
+            onSendRequest={() => {}}
+            onAcceptRequest={() => handleAcceptRequest(request._id)}
+            onRejectRequest={() => handleRejectRequest(request._id)}
+            acceptButtonText="Accept"
+            rejectButtonText="Reject"
           />
         ))}
       </div>
@@ -67,4 +89,4 @@ const FriendRecommendationsPage = () => {
   );
 };
 
-export default FriendRecommendationsPage;
+export default FriendRequestsPage;
