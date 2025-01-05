@@ -1,0 +1,74 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../constants';
+import UserCard from '../components/UserCard';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const FriendsPage = () => {
+  const [friends, setFriends] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    } else {
+      axios
+        .get(`${BASE_URL}/api/friends`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          setFriends(response.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error('Failed to fetch friends:', err);
+        });
+    }
+  }, [navigate]);
+
+  const handleRemoveFriend = (friendId) => {
+    const token = localStorage.getItem('token');
+    axios
+      .delete(`${BASE_URL}/api/friends/${friendId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        toast.success('Friend removed successfully');
+        setFriends((prevFriends) =>
+          prevFriends.filter((friend) => friend._id !== friendId)
+        );
+      })
+      .catch((err) => {
+        console.error('Failed to remove friend:', err);
+        toast.error('Error removing friend');
+      });
+  };
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div className="p-6 bg-[#F9F6E6] min-h-screen">
+      <h2 className="text-3xl font-semibold text-center text-[#441752] mb-6">
+        Your Friends
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {friends.map((friend) => (
+          <UserCard
+            key={friend._id}
+            username={friend.username}
+            interests={friend.interests}
+            mutualFriends={friend.mutualFriends || 0}
+            onRemoveFriend={() => handleRemoveFriend(friend._id)}
+          />
+        ))}
+      </div>
+      <ToastContainer />
+    </div>
+  );
+};
+
+export default FriendsPage;

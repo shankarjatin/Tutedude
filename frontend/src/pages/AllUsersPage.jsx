@@ -1,0 +1,82 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../constants';
+import UserCard from '../components/UserCard';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const AllUsersPage = () => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    } else {
+      axios
+        .get(`${BASE_URL}/api/friends/all`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          setUsers(response.data.map((user) => ({ ...user, requestSent: false })));
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error('Failed to fetch users:', err);
+        });
+    }
+  }, [navigate]);
+
+  const handleSendRequest = (userId) => {
+    const token = localStorage.getItem('token');
+    axios
+      .post(
+        `${BASE_URL}/api/friends/requests/${userId}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((response) => {
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === userId ? { ...user, requestSent: true } : user
+          )
+        );
+        toast.success('Friend request sent successfully!');
+      })
+      .catch((err) => {
+        console.error('Failed to send friend request:', err);
+        toast.error('Error sending friend request!');
+      });
+  };
+
+  if (loading) return <div className="text-center p-4">Loading...</div>;
+
+  return (
+    <div className="p-6 bg-[#F9F6E6] min-h-screen">
+      <h2 className="text-3xl font-semibold text-center text-[#441752] mb-6">
+        All Users
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {users.map((user) => (
+          <UserCard
+            key={user._id}
+            username={user.username}
+            interests={user.interests}
+            mutualFriends={user.mutualFriends || 0}
+            onSendRequest={() => handleSendRequest(user._id)}
+            requestSent={user.requestSent}
+          />
+        ))}
+      </div>
+   
+      <ToastContainer />
+    </div>
+  );
+};
+
+export default AllUsersPage;
