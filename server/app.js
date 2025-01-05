@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     try {
       console.log('Pinging server to keep it awake...');
       // Change this to your actual server's public URL
-      await axios.get('http://localhost:5000');
+      await axios.get('https://tutedude-x2vx.onrender.com');
       console.log('Server pinged successfully');
     } catch (error) {
       console.error('Error pinging the server:', error.message);
