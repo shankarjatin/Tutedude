@@ -3,7 +3,17 @@ const User = require('../models/User');
 // List all users in the system
 exports.getAllUsers = async (req, res) => {
     try {
-      const users = await User.find().select('username interests'); // Exclude sensitive fields like password
+      // Find the current user and their friends
+      const currentUser = await User.findById(req.user.id).populate('friends', '_id');
+  
+      // Get the IDs of the current user's friends
+      const friendIds = currentUser.friends.map(friend => friend._id);
+  
+      // Fetch all users except the current user and their friends
+      const users = await User.find({
+        _id: { $nin: [req.user.id, ...friendIds] }, // Exclude current user and friends
+      }).select('username interests'); // Exclude sensitive fields like password
+  
       res.json(users);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch users' });
