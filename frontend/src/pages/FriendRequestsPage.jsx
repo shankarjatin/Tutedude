@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
 import UserCard from '../components/UserCard';  // Import UserCard component
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import the default styles for toast notifications
 
 const FriendRequestsPage = () => {
   const [friendRequests, setFriendRequests] = useState([]);
@@ -36,13 +38,14 @@ const FriendRequestsPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        alert('Friend request accepted');
+        toast.success('Friend request accepted'); // Show success toast
         setFriendRequests((prevRequests) =>
           prevRequests.filter((request) => request._id !== requestId)
         ); // Remove accepted request instantly
       })
       .catch((err) => {
         console.error('Failed to accept friend request:', err);
+        toast.error('Error accepting friend request'); // Show error toast
       });
   };
 
@@ -53,13 +56,14 @@ const FriendRequestsPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        alert('Friend request rejected');
+        toast.success('Friend request rejected'); // Show success toast
         setFriendRequests((prevRequests) =>
           prevRequests.filter((request) => request._id !== requestId)
         ); // Remove rejected request instantly
       })
       .catch((err) => {
         console.error('Failed to reject friend request:', err);
+        toast.error('Error rejecting friend request'); // Show error toast
       });
   };
 
@@ -85,6 +89,8 @@ const FriendRequestsPage = () => {
           />
         ))}
       </div>
+      {/* Toast container to render toasts */}
+      <ToastContainer />
     </div>
   );
 };

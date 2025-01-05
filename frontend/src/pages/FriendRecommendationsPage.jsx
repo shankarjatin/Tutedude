@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
 import UserCard from '../components/UserCard';  // Import the UserCard component
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import the default styles for toast notifications
 
 const FriendRecommendationsPage = () => {
   const [recommendations, setRecommendations] = useState([]);
@@ -41,11 +43,11 @@ const FriendRecommendationsPage = () => {
             user._id === userId ? { ...user, requestSent: true } : user
           )
         );
-        alert('Friend request sent successfully');
+        toast.success('Friend request sent successfully!'); // Show success toast
       })
       .catch((err) => {
         console.error('Failed to send friend request:', err);
-        alert('Error sending friend request');
+        toast.error('Error sending friend request!'); // Show error toast
       });
   };
 
@@ -68,6 +70,9 @@ const FriendRecommendationsPage = () => {
           />
         ))}
       </div>
+
+      {/* Toast container to render toasts */}
+      <ToastContainer/>
     </div>
   );
 };

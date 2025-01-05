@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../constants';
 import UserCard from '../components/UserCard';  // Import UserCard component
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import default styles for toast notifications
 
 const FriendsPage = () => {
   const [friends, setFriends] = useState([]);
@@ -36,14 +38,14 @@ const FriendsPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        alert('Friend removed successfully');
-        // Immediately update state to remove the friend from the list
+        toast.success('Friend removed successfully'); // Show success toast
         setFriends((prevFriends) =>
           prevFriends.filter((friend) => friend._id !== friendId)
-        );
+        ); // Immediately update state to remove the friend from the list
       })
       .catch((err) => {
         console.error('Failed to remove friend:', err);
+        toast.error('Error removing friend'); // Show error toast
       });
   };
 
@@ -65,6 +67,8 @@ const FriendsPage = () => {
           />
         ))}
       </div>
+      {/* Toast container to render toasts */}
+      <ToastContainer />
     </div>
   );
 };
